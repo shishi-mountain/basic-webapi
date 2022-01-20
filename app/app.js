@@ -146,6 +146,6 @@ app.delete('/api/v1/users/:id', async (req, res) => {
     db.close()
 })
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 app.listen(port)
 console.log("listen on port: " + port)
