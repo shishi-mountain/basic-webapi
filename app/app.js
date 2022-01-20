@@ -4,6 +4,7 @@ const sqlite3 = require('sqlite3')
 const dbPath = "app/db/database.sqlite3"
 const path = require('path')
 const bodyParser = require('body-parser')
+const { default: axios } = require('axios')
 
 // リクエストのbodyをパースする設定
 app.use(bodyParser.urlencoded({extended: true}))
@@ -95,7 +96,6 @@ app.put('/api/v1/users/:id', async (req, res) => {
         // Connect database
         const db = new sqlite3.Database(dbPath)
         const id = req.params.id
-
         // 現在のユーザー情報を取得する
         db.get(`SELECT * FROM users WHERE id=${id}`, async (err, row) => {
 
@@ -108,18 +108,18 @@ app.put('/api/v1/users/:id', async (req, res) => {
 
             try {
                 await run(
-                `UPDATE users SET name="${name}", profile="${profile}", date_of_birth="${dateOfBirth}" WHERE id=${id}`,
-                db
+                    `UPDATE users SET name="${name}", profile="${profile}", date_of_birth="${dateOfBirth}" WHERE id=${id}`,
+                    db
                 )
                 res.status(200).send({message: "ユーザー情報を更新しました。"})
             } catch (e) {
                 res.status(500).send({error: e})
             }
-            }
-        })
-
-        db.close()
         }
+    })
+
+    db.close()
+    }
 })
 
 // Delete user data
@@ -146,6 +146,6 @@ app.delete('/api/v1/users/:id', async (req, res) => {
     db.close()
 })
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 app.listen(port)
 console.log("listen on port: " + port)
